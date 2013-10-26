@@ -11,8 +11,8 @@ $admin_password = "demo";
 
 $default_private_settings = "private_settings.fossil";
 $default_public_settings = "public_settings.fossil";
-$default_repo_username = "demo";
-$default_repo_password = "demo";
+$default_repo_username = "user";
+$default_repo_password = "user";
 $copyright = "My Repo";
 //End Configurations
 
