@@ -35,6 +35,8 @@ The default username and password for these 2 fossil repositories is:
     
 ###Screenshots
 
-<a href="//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-list.png">
-<img width="400px" src="//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-list.png" />
-</a>
+* [List of repositories](//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-list.png)
+* [List of repositories in mobile mode](//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-mobile.png)
+* [Add repository](//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-add.png)
+* [Fossil Bootstrap skin](//raw.github.com/jgmdev/fossilize/master/screenshots/fossil-skin-bootstrap.png)
+* [Fossil Bootstrap skin mobile](//raw.github.com/jgmdev/fossilize/master/screenshots/fossil-skin-bootstrap-mobile.png)
