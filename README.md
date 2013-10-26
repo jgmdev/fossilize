@@ -32,3 +32,9 @@ The default username and password for these 2 fossil repositories is:
 
     username: user
     password: user
+    
+###Screenshots
+
+<a href="//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-list.png">
+<img width="400px" src="//raw.github.com/jgmdev/fossilize/master/screenshots/repositories-list.png" />
+</a>
