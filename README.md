@@ -7,7 +7,7 @@ A small php script to manage fossil repositores hosted on a web server.
 
 Have a personal cloud of fossil repositories that can be accessed
 remotely as keep them on a place that has scheduled backups. Also
-Use a better fossil skin that is responsive by using bootstrap.
+have a better fossil skin that is responsive by using bootstrap.
 
 ###Installation
 
