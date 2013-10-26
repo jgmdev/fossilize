@@ -1,0 +1,28 @@
+AddHandler cgi-script .cgi
+
+#Disable direct download of fossil files
+<FilesMatch "\.fossil$">
+  order allow,deny
+  deny from all
+</FilesMatch>
+
+# Don't show directory listings for URLs which map to a directory.
+Options -Indexes +ExecCGI
+
+# Follow symbolic links in this directory.
+Options +FollowSymLinks
+
+# Set the default handler.
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^repos$ repos.php [L,QSA]
+    RewriteRule ^repos/all$ repos.php [L,QSA]
+    RewriteRule ^repos/all\?(.*)$ repos.php?$1 [L,QSA]
+    RewriteRule ^repos/(.*)$ repos.cgi/$1 [L,QSA]
+</IfModule>
