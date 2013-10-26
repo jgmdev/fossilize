@@ -1,7 +1,8 @@
 fossilize
 =========
 
-A small php script to manage fossil repositores hosted on a web server.
+A small php script to manage [fossil](http://www.fossil-scm.org) 
+repositores hosted on a web server.
 
 ###Motivation
 
