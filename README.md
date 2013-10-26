@@ -30,5 +30,5 @@ is used as a base.
 
 The default username and password for these 2 fossil repositories is:
 
-username: user
-password: user
+    username: user
+    password: user
