@@ -1,20 +1,45 @@
 <?php
 
-//Main Configuration Options
-$fossil_settings_path=".";
-$fossil_path="/usr/bin/fossil";
-$fossil_repos_path="./repositories";
-$base_path="/repos/all";
-$repos_base_path="/repos";
+/*Main Configuration Options*/
+/*====================================================================*/
+//Path where fossil settings are stored
+$fossil_settings_path = ".";
+
+//Path to the binary file of fossil
+$fossil_path = "/usr/bin/fossil";
+
+//Path where al fossil repositories reside and new ones will be created.
+$fossil_repos_path = "./repositories";
+
+//The path to access this file as defined on .htaccess
+//Example: http://mydomain.com/repos/all where /repos/all is the path
+$base_path = "/repos/all";
+
+//The path to access fossil repositories
+//Example: http://mydomain.com/repos/repo_name where /repos is the path
+$repos_base_path = "/repos";
+
+//The username and password used to access this page 
+//and manage repositories.
 $admin_user = "demo";
 $admin_password = "demo";
 
+//A fossil repo which settings are imported to every new 
+//repo created as private.
 $default_private_settings = "private_settings.fossil";
+
+//A fossil repo which settings are imported to every new 
+//repo created as public.
 $default_public_settings = "public_settings.fossil";
+
+//Default username and password for every new created repo
 $default_repo_username = "user";
 $default_repo_password = "user";
+
+//The owner of the repository.
 $copyright = "My Repo";
-//End Configurations
+/*====================================================================*/
+/*End Configurations*/
 
 session_start();
 
@@ -54,27 +79,74 @@ elseif(isset($_REQUEST['addrepo']))
         if($template != "")
         {
             $template = "$fossil_repos_path/$template.fossil";
-            $message = `HOME="$fossil_settings_path" "$fossil_path" init --template "$template"  -A "$username" "$fossil_repos_path/$name.fossil" 2>&1 && echo ""`;
+            
+            $command = "HOME=\"$fossil_settings_path\" ";
+            $command .= "\"$fossil_path\" ";
+            $command .= "init ";
+            $command .= "--template \"$template\" ";
+            $command .= "-A \"$username\" ";
+            $command .= "\"$fossil_repos_path/$name.fossil\" ";
+            $command .= "2>&1 && echo \"\"";
+            
+            $message = `$template`;
         }
         elseif($_REQUEST["access"]=="private")
         {
-            $message = `HOME="$fossil_settings_path" "$fossil_path" init --template "$default_private_settings"  -A "$username" "$fossil_repos_path/$name.fossil" 2>&1 && echo ""`;
+            $command = "HOME=\"$fossil_settings_path\" ";
+            $command .= "\"$fossil_path\" ";
+            $command .= "init ";
+            $command .= "--template \"$default_private_settings\" ";
+            $command .= "-A \"$username\" ";
+            $command .= "\"$fossil_repos_path/$name.fossil\" ";
+            $command .= "2>&1 && echo \"\"";
+            
+            $message = `$command`;
         }
         elseif($_REQUEST["access"]=="public")
         {
-            $message = `HOME="$fossil_settings_path" "$fossil_path" init --template "$default_public_settings"  -A "$username" "$fossil_repos_path/$name.fossil" 2>&1 && echo ""`;
+            $command = "HOME=\"$fossil_settings_path\" ";
+            $command .= "\"$fossil_path\" ";
+            $command .= "init ";
+            $command .= "--template \"$default_public_settings\" ";
+            $command .= "-A \"$username\" ";
+            $command .= "\"$fossil_repos_path/$name.fossil\" ";
+            $command .= "2>&1 && echo \"\"";
+            
+            $message = `$command`;
         }
         elseif($_REQUEST["access"]=="default")
         {
-            $message = `HOME="$fossil_settings_path" "$fossil_path" init -A "$username" "$fossil_repos_path/$name.fossil" 2>&1 && echo ""`;
+            $command = "HOME=\"$fossil_settings_path\" ";
+            $command .= "\"$fossil_path\" ";
+            $command .= "init ";
+            $command .= "-A \"$username\" ";
+            $command .= "\"$fossil_repos_path/$name.fossil\" ";
+            $command .= "2>&1 && echo \"\"";
+            
+            $message = `$command`;
         }
         
-            
-        $message = rtrim(str_replace("\n", "<br />", $message), "<br />");
+        //Replace new lines with <br />
+        $message = rtrim(
+            str_replace(
+                "\n", "<br />", $message
+            ), 
+            "<br />"
+        );
         
         //Set password
         if($password != "")
-            `HOME="$fossil_settings_path" "$fossil_path" user password "$username" "$password" -R "$fossil_repos_path/$name.fossil"`;
+        {
+            $command = "HOME=\"$fossil_settings_path\" ";
+            $command .= "\"$fossil_path\" ";
+            $command .= "user password ";
+            $command .= "\"$username\" ";
+            $command .= "\"$password\" ";
+            $command .= "-R ";
+            $command .= "\"$fossil_repos_path/$name.fossil\"";
+            
+            `$command`;
+        }
     }
 }
 
@@ -84,7 +156,7 @@ elseif(isset($_REQUEST['removerepo']) && !isset($_REQUEST["no"]))
     if(trim($_REQUEST['name']) != "")
     {
         $repo = trim($_REQUEST['name']);
-        `rm $fossil_repos_path/$repo.fossil`;
+        unlink("$fossil_repos_path/$repo.fossil");
     }
     
     header("Location: $base_path");
@@ -190,7 +262,7 @@ elseif(isset($_REQUEST['removerepo']) && !isset($_REQUEST["no"]))
     
     <div class="container">
 
-<?php if(isset($_REQUEST["remove"])){ //Remove repository ?>
+<?php if(isset($_REQUEST["remove"])){ //Confirm repository removal ?>
     
     <h1>Are you sure you want to delete the repo?</h1>
     
@@ -203,7 +275,7 @@ elseif(isset($_REQUEST['removerepo']) && !isset($_REQUEST["no"]))
         <button type="submit" name="no" class="btn btn-cancel">No</button>
     </form>
 
-<?php } elseif(isset($_SESSION["logged"])){ //Repositories ?>
+<?php } elseif(isset($_SESSION["logged"])){ //List repositories ?>
 
     <h1>Repositories</h1>
     
@@ -297,23 +369,33 @@ elseif(isset($_REQUEST['removerepo']) && !isset($_REQUEST["no"]))
 
     ?>
 
-<?php } else { //Login ?>
+<?php } else { //Welcome page ?>
     
     <h1>Welcome!</h1>
     
     <?php
         if(isset($message))
-            print '<div class="alert alert-danger"><strong>Error:</strong> '.$message.'</div>';
+        {
+            print '<div class="alert alert-danger">';
+            print '<strong>Error:</strong> ';
+            print $message;
+            print '</div>';
+        }
     ?>
 
-    <p>To start viewing and managing all your repositorites please login with your username and password.</p>
+    <p>
+        To start viewing and managing all your repositorites please 
+        login with your username and password.
+    </p>
 
 <?php } ?>
 
     <hr />
 
     <footer>
-        <p class="pull-right">&copy; <?=$copyright?> <?=date("Y", time())?></p>
+        <p class="pull-right">
+            &copy; <?=$copyright?> <?=date("Y", time())?>
+        </p>
     </footer>
 
     </div>
